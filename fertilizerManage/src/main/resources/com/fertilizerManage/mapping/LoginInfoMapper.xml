@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.fertilizerManage.mapper.LoginInfoMapper">
+ 
+ 
+    <select id="findLoginInfoByCondition" parameterType="com.example.fertilizerManage.entity.User" resultType="com.example.fertilizerManage.entity.User">
+        select u.id,u.mobile,u.name as login_name,u.password from tb_user u
+        where u.is_delete =0
+        <if test="login_name !=null">
+           and u.name =  #{login_name}    
+        </if>
+        <if test="password !=null and password !='' ">
+           and u.password = #{password}    
+        </if>
+    </select>
+    <select id="findByUserName" resultType="com.example.fertilizerManage.entity.User">
+        select u.id,u.mobile,u.name as login_name,u.password from tb_user u
+        where u.is_delete =0
+        <if test="userName !=null and userName != '' ">
+           and u.name = #{userName} 
+        </if>
+    </select>
+ 
+</mapper>

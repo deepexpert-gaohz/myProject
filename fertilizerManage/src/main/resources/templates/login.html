@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>高邮果林化肥后台登录</title>
+		<link type="text/css" th:href="@{/admin/layui/css/layui.css}" rel="stylesheet" />
+		<link type="text/css" th:href="@{/admin/css/login.css}" rel="stylesheet" />
+	</head>
+    
+	<body>
+		<div class="m-login-bg">
+			<div class="m-login">
+				<h3>高邮果林化肥后台系统</h3>
+				<div class="m-login-warp">
+					<form class="layui-form">
+						<div class="layui-form-item">
+							<input type="text" id="title" name="title" required lay-verify="required" placeholder="用户名" autocomplete="off" class="layui-input">
+						</div>
+						<div class="layui-form-item">
+						    <div class="layui-inline" style="width: 280px">
+							    <input type="password" id="password" name="password" required lay-verify="required" placeholder="密码" autocomplete="off" class="layui-input">
+							</div>
+							<img style="background:#ececec;" id="img" onclick="hideShowPsw()" src="/admin/images/icon-visible.png">
+						</div>
+						<div class="layui-form-item">
+							<div class="layui-inline">
+								<input type="text" id="verity" name="verity" required lay-verify="required" placeholder="验证码" autocomplete="off" class="layui-input">
+							</div>
+							<div class="layui-inline">
+								<img class="verifyImg"   onclick="this.src=this.src+'?c='+Math.random();" src="/verificationCode" />
+							</div>
+						</div>
+						<div class="layui-form-item m-login-btn">
+							<div class="layui-inline">
+								<button class="layui-btn layui-btn-normal" lay-submit lay-filter="login">登录</button>
+							</div>
+							<div class="layui-inline">
+								<button type="reset" class="layui-btn layui-btn-primary">取消</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				<p class="copyright">Copyright 2015-2016 by XIAODU</p>
+			</div>
+		</div>
+		<script th:src="@{/admin/layui/layui.js}"></script>
+		<script th:src="@{/jquery-1.10.2.js}"></script>
+		<script>
+		
+		
+		function path(){
+			//获取当前网址，如： http://localhost:8083/uimcardprj/share/meun.jsp
+		    var curWwwPath=window.document.location.href;
+			console.log(curWwwPath);
+		    //获取主机地址之后的目录，如： uimcardprj/share/meun.jsp
+		    var pathName=window.document.location.pathname;
+		    var pos=curWwwPath.indexOf(pathName);
+		    //获取主机地址，如： http://localhost:8083
+		    var localhostPaht=curWwwPath.substring(0,pos);
+		    //获取带"/"的项目名，如：/uimcardprj
+		    var projectName=pathName.substring(0,pathName.substr(1).indexOf('/')+1);
+		    
+		    return localhostPaht+projectName;
+		}
+		
+		  function hideShowPsw(){
+			  if($("#password").prop("type") == "password"){
+				  $('#password').attr('type','text');
+				  $('#img').attr('src','/admin/images/icon-invisible.png');
+			  }else{
+				  $('#password').attr('type','password');
+				  $('#img').attr('src','/admin/images/icon-visible.png');
+			  }
+		  };
+		
+			layui.use(['form','layer'], function() {
+				var form = layui.form();
+				//var $      = layui.jquery;
+					layer = layui.layer;
+					
+				
+				
+				//监听提交
+				form.on('submit(login)', function(data) {
+					/* layer.alert(JSON.stringify(data.field), {
+					      title: '最终的提交信息'
+					    });
+					console.log($('#title').val()); */
+					//获取当前网址，如： http://localhost:8083/uimcardprj/share/meun.jsp
+				    var curWwwPath=window.document.location.href;
+					console.log(curWwwPath);
+				    //获取主机地址之后的目录，如： uimcardprj/share/meun.jsp
+				    var pathName=window.document.location.pathname;
+				    var pos=curWwwPath.indexOf(pathName);
+				    //获取主机地址，如： http://localhost:8083
+				    var localhostPaht=curWwwPath.substring(0,pos);
+				    //获取带"/"的项目名，如：/uimcardprj
+				    var projectName=pathName.substring(0,pathName.substr(1).indexOf('/')+1);
+				    console.log(localhostPaht);
+				    console.log(projectName);
+					 $.ajax({
+						type : "POST",
+						//请求地址
+			            url : localhostPaht+projectName+"/vertify",
+			            dataType:'json',
+			          //数据，json字符串
+			            data : {login_name:$('#title').val(),password:$('#password').val(),verity:$('#verity').val()},
+			            success:function(data){
+
+			            	if (data.result =="success") {
+		                        layer.msg('登录成功');
+		                        console.log(data.userName);
+		                        window.location.href = localhostPaht+projectName+"/indexLL?userName="+data.userName;
+		                    }else if(data.result == "defeat") {
+		                        layer.msg('校验码错误,登录失败');
+		                        
+		                    }else{
+		                    	layer.msg('账号密码错误,登录失败');
+		                    }
+			            }
+					}); 
+					return false;
+				});
+
+			});
+		</script>
+	</body>
+
+</html>

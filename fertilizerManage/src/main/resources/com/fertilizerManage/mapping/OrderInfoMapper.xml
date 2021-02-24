@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.fertilizerManage.mapper.OrderInfoMapper">
+ 
+    <sql id="selectParam">
+      id as id,buyer_name as buyerName,tel as tel,address as address,variety as variety,
+      unit_price as unitPrice,count as count,total_price as totalPrice,pay_price as payPrice,
+      owe_price as owePrice,date as date,paystatus as payStatus
+    </sql>
+ 
+ 
+    <select id="findOrderListByCondition"  parameterType="com.example.fertilizerManage.entity.OrderList" resultType="com.example.fertilizerManage.entity.OrderList">
+        select 
+           <include refid="selectParam"></include> 
+        from tb_orderlist t
+        <where>
+            <if test="buyerName != null and buyerName != '' ">
+                t.buyer_name like '%'#{buyerName}'%'
+            </if>
+            <if test="tel != null and tel != '' ">
+               and t.tel like '%'#{tel}'%'
+            </if>
+            <if test="address != null and address != '' ">
+              and  t.address like '%'#{address}'%'
+            </if>
+            <if test="date != null and date != '' ">
+              and DATE_FORMAT(t.date,'%Y-%m-%d') = #{date} 
+            </if>
+        </where>
+         limit #{pageNo} , #{pageSize}
+    </select>
+ 
+ 
+    <update id="updateOrderList" parameterType="com.example.fertilizerManage.entity.OrderList" >
+        update tb_orderlist set 
+        buyer_name=#{buyerName},tel=#{tel},address=#{address},variety=#{variety},unit_price=#{unitPrice},count=#{count},
+        total_price=#{totalPrice},pay_price=#{payPrice},owe_price=#{owePrice},date=#{date},paystatus=#{payStatus} 
+        where id=#{id}
+    </update>
+    
+</mapper>

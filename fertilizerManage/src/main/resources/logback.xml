@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!--输出日志到控制台的策略-->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <!--指定日志输出的格式-->
+        <layout>
+            <pattern>
+                [%p] %d-%msg%n
+            </pattern>
+        </layout>
+    </appender>
+
+    <!--输出日志到文件-->
+    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--日志过滤器 在LEVEL之下的日志输出不会被打印出来-->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>debug</level>   <!--指定日志级别-->
+            <onMatch>DENY</onMatch> <!--匹配条件  ACCEPT接收   DENY否认  debug不写入到日志内-->
+            <!--<onMismatch>DENY</onMismatch>   不匹配条件  DENY否认 debug不写入到日志内-->
+        </filter>
+        <!--指定日志输出的格式-->
+        <encoder>
+            <pattern>
+                [%p] %d-%msg%n
+            </pattern>
+        </encoder>
+        <!--指定日志输出路径-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>
+                e:/logs/11122%d.log
+            </fileNamePattern>
+        </rollingPolicy>
+    </appender>
+    <root level="debug">
+        <!--使用相关的策略-->
+        <appender-ref ref="console"/>
+        <appender-ref ref="file"/>
+    </root>
+</configuration>
